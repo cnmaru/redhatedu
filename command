@@ -12,6 +12,13 @@ vi /etc/selinux/config			# SElinux disable
 setenforce 0
 getenforce
 
+[root@master01 ~]# cat /etc/hosts
+127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1 localhost6 localhost6.localdomain6 localhost6.localdomain
+172.16.90.93    master01
+172.16.90.94    worker01
+172.16.90.95    worker02
+
 
 [Master 사항]
 yum install -y epel-release		# epel repo 등록
@@ -28,6 +35,61 @@ cd kubespray/
 pip3.9 install -r requirements.txt						# 패키지 설치
 cp -rfp inventory/sample inventory/testcluster
 vi inventory/testcluster/inventory.ini					# 호스트 등록
+
+///
+[root@master01 kubespray]# cat inventory/testcluster/inventory.ini
+# ## Configure 'ip' variable to bind kubernetes services on a
+# ## different ip than the default iface
+# ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value.
+[all]
+# node1 ansible_host=95.54.0.12  # ip=10.3.0.1 etcd_member_name=etcd1
+# node2 ansible_host=95.54.0.13  # ip=10.3.0.2 etcd_member_name=etcd2
+# node3 ansible_host=95.54.0.14  # ip=10.3.0.3 etcd_member_name=etcd3
+# node4 ansible_host=95.54.0.15  # ip=10.3.0.4 etcd_member_name=etcd4
+# node5 ansible_host=95.54.0.16  # ip=10.3.0.5 etcd_member_name=etcd5
+# node6 ansible_host=95.54.0.17  # ip=10.3.0.6 etcd_member_name=etcd6
+master01        ansible_host=172.16.90.93  ip=172.16.90.93
+worker01        ansible_host=172.16.90.94  ip=172.16.90.94
+worker02        ansible_host=172.16.90.95  ip=172.16.90.95
+
+# ## configure a bastion host if your nodes are not directly reachable
+# [bastion]
+# bastion ansible_host=x.x.x.x ansible_user=some_user
+
+[kube_control_plane]
+master01
+
+# node1
+# node2
+# node3
+
+[etcd]
+master01
+
+# node1
+# node2
+# node3
+
+[kube_node]
+worker01
+worker02
+
+# node2
+# node3
+# node4
+# node5
+# node6
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+calico_rr
+
+///
+
+
 cat inventory/testcluster/inventory.ini
 ansible --version
 ansible all -i inventory/testcluster/inventory.ini -m ping		# ping test

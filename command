@@ -96,6 +96,51 @@ ansible all -i inventory/testcluster/inventory.ini -m ping		# ping test
 ansible-playbook -i inventory/testcluster/inventory.ini --become --become-user=root cluster.yml		# 클러스터 설치
 kubectl get nodes						# 설치 확인
 vi inventory/testcluster/group_vars/k8s_cluster/addons.yml			# 대시보드 활성화
+
+
+///
+[root@master01 kubespray]# cat inventory/testcluster/group_vars/k8s_cluster/addons.yml | grep -v '#'
+---
+dashboard_enabled: true
+
+helm_enabled: false
+
+registry_enabled: false
+
+metrics_server_enabled: true
+
+local_path_provisioner_enabled: false
+
+local_volume_provisioner_enabled: false
+
+
+cephfs_provisioner_enabled: false
+
+rbd_provisioner_enabled: false
+
+ingress_nginx_enabled: true
+ingress_publish_status_address: ""
+
+ingress_alb_enabled: false
+
+cert_manager_enabled: false
+
+
+
+
+metallb_enabled: false
+metallb_speaker_enabled: "{{ metallb_enabled }}"
+
+argocd_enabled: false
+
+krew_enabled: false
+krew_root_dir: "/usr/local/krew"
+
+kube_vip_enabled: false
+
+///
+
+
 ansible-playbook -i inventory/testcluster/inventory.ini --become --become-user=root cluster.yml		# 클러스터 추가 설치
 kubectl cluster-info
 kubectl get node

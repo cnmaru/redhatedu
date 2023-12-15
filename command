@@ -168,6 +168,8 @@ subjects:
   name: admin-user
   namespace: kube-system
 
+kubectl apply -f admin.yaml
+
 kubectl -n kube-system create token admin-user			# 토큰 생성
 kubectl proxy --address='127.0.0.1' --port='8001'		# proxy 생성
 

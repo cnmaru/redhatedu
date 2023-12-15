@@ -171,4 +171,4 @@ subjects:
 kubectl -n kube-system create token admin-user			# 토큰 생성
 kubectl proxy --address='127.0.0.1' --port='8001'		# proxy 생성
 
-## http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login 로 접속하여 토큰 이용 대시보드 로그인
+## http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login 웹페이지에서 접속하여 토큰 이용 대시보드 로그인
